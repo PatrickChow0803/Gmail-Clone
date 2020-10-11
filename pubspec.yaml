@@ -21,6 +21,14 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  cloud_firestore:
+  firebase_auth:
+  firebase_storage:
+  firebase_core:
+  google_fonts:
+  uuid:
+  intl:
+  image_picker:
   flutter:
     sdk: flutter
 
