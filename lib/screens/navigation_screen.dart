@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gmail_clone/screens/mail_screen.dart';
+import 'package:gmail_clone/screens/sign_up_screen.dart';
 import 'package:gmail_clone/variables.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -74,7 +75,8 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     RaisedButton(
-                      onPressed: () {},
+                      onPressed: () => Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => SignUpScreen())),
                       color: Colors.lightBlue[200],
                       child: Text(
                         "Create Account",
