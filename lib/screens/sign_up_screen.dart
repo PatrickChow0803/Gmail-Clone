@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../variables.dart';
 
@@ -11,6 +12,18 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   File imagePath;
+
+  pickImage(ImageSource imageSource) async {
+    final image = await ImagePicker().getImage(
+      source: imageSource,
+      maxHeight: 800,
+      maxWidth: 670,
+    );
+    setState(() {
+      imagePath = File(image.path);
+    });
+    Navigator.of(context).pop();
+  }
 
   pickImageDialog() {
     return showDialog(
@@ -23,14 +36,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   'From Gallery',
                   style: myStyleMontserrat(size: 20.0, color: Colors.lightBlue),
                 ),
-                onPressed: pickImage,
+                onPressed: () => pickImage(ImageSource.gallery),
               ),
               SimpleDialogOption(
                 child: Text(
                   'From Camera',
                   style: myStyleMontserrat(size: 20.0, color: Colors.lightBlue),
                 ),
-                onPressed: pickImage,
+                onPressed: () => pickImage(ImageSource.camera),
               ),
               SimpleDialogOption(
                 child: Text(
