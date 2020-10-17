@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../variables.dart';
@@ -8,6 +10,42 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  File imagePath;
+
+  pickImageDialog() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            children: [
+              SimpleDialogOption(
+                child: Text(
+                  'From Gallery',
+                  style: myStyleMontserrat(size: 20.0, color: Colors.lightBlue),
+                ),
+                onPressed: pickImage,
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  'From Camera',
+                  style: myStyleMontserrat(size: 20.0, color: Colors.lightBlue),
+                ),
+                onPressed: pickImage,
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  'Cancel',
+                  style: myStyleMontserrat(size: 20.0, color: Colors.lightBlue),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,22 +115,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         child: IconButton(
                           icon: Icon(Icons.add),
-                          onPressed: () {},
+                          onPressed: () => pickImageDialog(),
                         ),
                       ),
                       Text(
                         "Choose Profile Image",
                         style: myStyleMontserrat(size: 20.0, color: Colors.black),
                       ),
-                      RaisedButton(
-                        onPressed: () {},
-                        color: Colors.lightBlueAccent,
-                        child: Text(
-                          'Register',
-                          style: myStyleMontserrat(size: 20.0),
-                        ),
-                      )
                     ],
+                  ),
+                  RaisedButton(
+                    onPressed: () {},
+                    color: Colors.lightBlueAccent,
+                    child: Text(
+                      'Register',
+                      style: myStyleMontserrat(size: 20.0),
+                    ),
                   )
                 ],
               ),
