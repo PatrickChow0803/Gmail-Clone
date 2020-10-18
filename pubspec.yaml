@@ -24,7 +24,7 @@ dependencies:
   cloud_firestore:
   firebase_auth:
   firebase_storage:
-  firebase_core:
+#  firebase_core:
   google_fonts:
   uuid:
   intl:
