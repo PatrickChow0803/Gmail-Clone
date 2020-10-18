@@ -1,7 +1,11 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:gmail_clone/models/user.dart';
 import 'package:image_picker/image_picker.dart';
+import '../models/user.dart' as myUser;
 
 import '../variables.dart';
 
@@ -12,6 +16,13 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   File imagePath;
+
+  // This key is used to show a snackbar within the registerUser method.
+  // GlobalKey means being able to access it anywhere
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
 
   pickImage(ImageSource imageSource) async {
     final image = await ImagePicker().getImage(
@@ -59,9 +70,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
         });
   }
 
+  uploadImage() async {
+    // store image into the storage
+    StorageUploadTask storageUploadTask =
+        profilePics.child(emailController.text).putFile(imagePath);
+
+    // complete storage
+    StorageTaskSnapshot storageTaskSnapshot = await storageUploadTask.onComplete;
+
+    // download pic
+    String downloadedPic = await storageTaskSnapshot.ref.getDownloadURL();
+
+    return downloadedPic;
+  }
+
+  registerUser() async {
+    try {
+      String downloadpic = await uploadImage();
+      FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text)
+          .then((signedUser) {
+        myUser.User().storeuser(emailController.text, passwordController.text, downloadpic);
+      });
+    } catch (e) {
+      print(e);
+      SnackBar snackBar = SnackBar(content: Text(e.toString()));
+      scaffoldKey.currentState.showSnackBar(snackBar);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       body: SingleChildScrollView(
         child: Center(
           child: Container(
@@ -89,9 +131,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     width: MediaQuery.of(context).size.width,
                     margin: EdgeInsets.symmetric(horizontal: 20.0),
                     child: TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                           filled: true,
-                          hintText: "Username",
+                          hintText: "Email",
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0))),
                     ),
                   ),
@@ -100,6 +143,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     width: MediaQuery.of(context).size.width,
                     margin: EdgeInsets.symmetric(horizontal: 20.0),
                     child: TextField(
+                      controller: passwordController,
                       decoration: InputDecoration(
                           filled: true,
                           hintText: "Password",
@@ -126,14 +170,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           borderRadius: BorderRadius.circular(20.0),
                           color: Colors.lightBlue,
                         ),
-                        child: IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: () => pickImageDialog(),
-                        ),
+                        child: imagePath == null
+                            ? IconButton(
+                                icon: Icon(Icons.add),
+                                onPressed: () => pickImageDialog(),
+                              )
+                            : Image(
+                                image: FileImage(imagePath),
+                              ),
                       ),
-                      Text(
-                        "Choose Profile Image",
-                        style: myStyleMontserrat(size: 20.0, color: Colors.black),
+                      InkWell(
+                        onTap: pickImageDialog,
+                        child: Text(
+                          "Choose Profile Image",
+                          style: myStyleMontserrat(size: 20.0, color: Colors.black),
+                        ),
                       ),
                     ],
                   ),
