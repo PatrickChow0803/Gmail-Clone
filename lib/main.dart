@@ -4,8 +4,8 @@ import 'package:gmail_clone/screens/navigation_screen.dart';
 
 void main() async {
   // these two lines are used to work with Firebase
-//  WidgetsFlutterBinding.ensureInitialized();
-//  await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

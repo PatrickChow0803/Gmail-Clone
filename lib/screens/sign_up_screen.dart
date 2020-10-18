@@ -86,7 +86,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   registerUser() async {
     try {
-      String downloadpic = await uploadImage();
+      String downloadpic = imagePath == null
+          ? 'https://theimag.org/wp-content/uploads/2015/01/user-icon-png-person-user-profile-icon-20.png'
+          : await uploadImage();
       FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: emailController.text, password: passwordController.text)
@@ -189,7 +191,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: () => registerUser(),
                     color: Colors.lightBlueAccent,
                     child: Text(
                       'Register',
